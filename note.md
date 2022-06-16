@@ -93,4 +93,19 @@ edition = "2021"
 - 函数的返回值类型必须在函数定义时，在 ‘->’ 后面声明。**函数的返回值不能被命名**
 
 ## 控制流
--
+### if
+- 在 rust 中，if 的 condition 中不需要添加‘()’
+- 在 rust 中，if 的 condition 必须是布尔值
+- 在 rust 中，if-else 的返回值类型必须是一样
+
+### 循环
+- loop：死循环，直到 break 条件生效
+    - 如果 break 后面有跟表达式，则该表达式的值就是这个 loop 的返回值
+- while
+    - 跟其他语言的 while 循环基本一样
+- for
+    - 一般是用于遍历集合
+
+# Range
+- 标准库提供的一个库，指定一个开始数字和结束数字， Range 可以生成它们之间的数字（[start_num .. end_num)）
+- rev 方法可以反转 Range
