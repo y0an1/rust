@@ -26,3 +26,4 @@ fn main() {
     function::return_value();
     function::func_return_value();
 }
+ 
