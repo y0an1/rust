@@ -4,26 +4,30 @@ mod variables;
 mod data_type;
 mod control_stream;
 mod function;
+mod func_owner;
 
 
 fn main() {
-    hello_rust::println();
+    // hello_rust::println();
 
-    data_type::base_type();
-    data_type::tuple_type();
-    data_type::array_type();
+    // data_type::base_type();
+    // data_type::tuple_type();
+    // data_type::array_type();
 
-    variables::mutable();
-    variables::shadow_1();
-    variables::shadow_2();
+    // variables::mutable();
+    // variables::shadow_1();
+    // variables::shadow_2();
 
-    control_stream::ctrl_if();
-    control_stream::ctrl_loop();
-    control_stream::ctrl_while();
-    control_stream::ctrl_for();
-    control_stream::use_range();
+    // control_stream::ctrl_if();
+    // control_stream::ctrl_loop();
+    // control_stream::ctrl_while();
+    // control_stream::ctrl_for();
+    // control_stream::use_range();
 
-    function::return_value();
-    function::func_return_value();
+    // function::return_value();
+    // function::func_return_value();
+
+    // func_owner::func_move();
+    func_owner::func_clone();
 }
  
