@@ -48,7 +48,7 @@ fn _demo_4() {
 
     /*
     error[E0499]: cannot borrow `s` as mutable more than once at a time
-    --> src/demo/borrow/mod.rs:45:14
+    --> src/demo/borrow/_struct:45:14
     |
     44 |     let s1 = &mut s;
     |              ------ first mutable borrow occurs here
@@ -75,15 +75,15 @@ fn _demo_5() {
 
 // 一个变量不可以同时有不可变引用和可变引用
 fn _demo_6() {
-    let mut s = String::from("hello");
-    let r1 = &s;
-    let r2 = &s;
+    let mut _s = String::from("hello");
+    let r1 = &_s;
+    let r2 = &_s;
     println!("r1:{}, r2:{}", r1, r2);
 
     // let s1 = &mut s;
     /*
         error[E0502]: cannot borrow `s` as mutable because it is also borrowed as immutable
-        --> src/demo/borrow/mod.rs:81:14
+        --> src/demo/borrow/_struct:81:14
         |
         79 |     let r1 = &s;
         |              -- immutable borrow occurs here
@@ -110,7 +110,7 @@ fn _demo_6() {
 
 /*
 error[E0106]: missing lifetime specifier
-   --> src/demo/borrow/mod.rs:106:16
+   --> src/demo/borrow/_struct:106:16
     |
 106 | fn dangle() -> &String{
     |                ^ expected named lifetime parameter

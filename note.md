@@ -220,3 +220,98 @@ edition = "2021"
 
 - Rust 中另一种不持有所有权的数据类型
 
+## 字符串切片
+
+- 指向字符串中的一部分引用， 当该字符串无效时，其切片也随之无效 
+- 形式： ```&str[start_index..end_index]```
+  - **start_index**: 切片起始位置的索引
+  - **end_index**: 切片终止位置的下一个索引值
+- 语法糖
+  - 如果 start_index 从 0 开始，则可以不写
+  - 如果 end_index 是字符串的长度，也可以不写
+- **注意**
+  - 字符串切片的范围索引必须发生在有效的 UTF-8 字符边界内
+  - 当尝试从一个多字节的字符中创建字符串切片，程序会报错并退出
+- 字符串切片的类型： **&str**
+- 将字符串切片作为函数参数，可以同时接收 String 和 &str 类型的参数
+
+# struct
+
+- 定义 struct
+
+```rust
+struct User {
+  username:         String,
+  email:            String,
+  sign_in_count:    u64,
+  active:           bool,   // 注意：最后一个字段也是以 “,” 结尾
+}
+```
+
+- 实例化 struct
+
+```rust
+let user = User {
+    email: String::from("someone@example.com"),
+    username: String::from("someusername123"),
+    active: true,
+    sign_in_count: 1,
+};
+```
+
+- struct 更新语法
+
+```rust
+let user1 = User {
+    email: String::from("someone@example.com"),
+    username: String::from("someusername123"),
+    active: true,
+    sign_in_count: 1,
+};
+
+let user2 = User {
+  email: String::from("someone@example.com"),
+  username: String::from("someusername123"),
+  ..user1,
+};
+```
+
+## Tuple struct
+
+- 类似 tuple 的 struct，即：struct 整体有名，而字段没有名
+
+```rust
+struct Color(i32, i32, i32);
+struct Point(i32, i32, i32);
+
+let black = Color(0, 0, 0);
+let origin = Point(0, 0, 0);
+```
+
+## Unit-Like Struct
+
+- 没有任何字段的结构体
+- 适用于需要在某个类型上实现某个 trait，但在里面又没有想要存储的数据
+
+## struct 所有权
+
+```rust
+struct User {
+  username: String,
+  email: String,
+  sign_in_count: u64,
+  active: bool,
+}
+```
+
+- User 这个 struct 的字段是使用了 String，而不是 &str，所以
+  - 该 struct 实力拥有其所有的数据
+  - 只要 struct 实例是有效的，那么里面的字段数据也是有效的
+- 当 struct 的字段是引用时，涉及到生命周期（后面讲解）
+  - 生命周期保证只要 struct 实例是有效的，那么引用字段就是有效的 
+  - 如果 struct 里面的字段是引用，而没有使用生命周期，程序就会报错
+
+## 打印结构体
+
+- 如果想要使用 **println!("{}", struct)** 来打印一个 struct 实例，必须实现 **std::fmt::Display** 函数，否则实现 **std::fmt::Debug** 函数
+- 如果以上两个函数都没有实现，但却要调试信息，则可以在声明结构体时，在其上面添加 **#[derive(Debug)]** 后，后续则可以用 **{:?}** 或者 **{:#?}** 来打印出当前的结构体实例的结构
