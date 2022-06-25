@@ -1,14 +1,5 @@
-
-pub fn ctrl_stream_main() {
-    ctrl_if();
-    ctrl_loop();
-    ctrl_while();
-    ctrl_for();
-
-}
-
 // if
-fn ctrl_if() {
+fn _ctrl_if() {
     let number = 3;
     if number < 5 {
         println!("condition was true");
@@ -18,7 +9,7 @@ fn ctrl_if() {
 }
 
 // loop
-fn ctrl_loop() {
+fn _ctrl_loop() {
     let mut condition = 10;
     let loop_ret_value = loop {
         condition += 1;
@@ -30,7 +21,7 @@ fn ctrl_loop() {
 }
 
 // while
-fn ctrl_while() {
+fn _ctrl_while() {
     let mut condition = 3;
     while condition > 0 {
         println!("{}", condition);
@@ -40,7 +31,7 @@ fn ctrl_while() {
 }
 
 // for
-fn ctrl_for() {
+fn _ctrl_for() {
     let ary = [1, 2, 3, 4, 5, 6];
     // 使用while循环遍历集合，需要先判断其范围，容易越界访问
     // let mut idx = 0;
@@ -63,9 +54,17 @@ fn ctrl_for() {
 }
 
 // 使用 range 库
-fn use_range() {
+fn _use_range() {
     for number in (1..4).rev() {
         println!("{}", number);
     }
     println!("LIFTOFF!");
+}
+
+pub fn main() {
+    // _ctrl_if();
+    // _ctrl_loop();
+    // _ctrl_while();
+    // _ctrl_for();
+    // _use_range();
 }
