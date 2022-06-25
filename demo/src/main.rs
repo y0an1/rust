@@ -1,33 +1,39 @@
+// mod example::
 
-mod hello_rust;
-mod variables;
-mod data_type;
-mod control_stream;
-mod function;
-mod func_owner;
+// mod hello_rust;
+// mod variables;
+// mod data_type;
+// mod control_stream;
+// mod return_value;
+// mod owner_var;
+// mod owner_fnc;
+// mod owner_ret_value;
 
+mod demo;
+
+use crate::demo::hello_rust;
+use crate::demo::data_type::data_type_main;
+use crate::demo::variables::variables_main;
+use crate::demo::ctrl_stream::ctrl_stream_main;
+use crate::demo::ret_value::ret_value_main;
+use crate::demo::owner::var::owner_var_main;
+use crate::demo::owner::fnc::owner_fnc_main;
 
 fn main() {
-    // hello_rust::println();
+    hello_rust::hello_rust_main();
 
-    // data_type::base_type();
-    // data_type::tuple_type();
-    // data_type::array_type();
+    data_type_main();
 
-    // variables::mutable();
-    // variables::shadow_1();
-    // variables::shadow_2();
+    variables_main();
 
-    // control_stream::ctrl_if();
-    // control_stream::ctrl_loop();
-    // control_stream::ctrl_while();
-    // control_stream::ctrl_for();
-    // control_stream::use_range();
+    ctrl_stream_main();
 
-    // function::return_value();
-    // function::func_return_value();
+    ret_value_main();
 
-    // func_owner::func_move();
-    func_owner::func_clone();
+    owner_var_main();
+
+    owner_fnc_main();
+
+    crate::demo::owner::ret_value::owner_ret_value_main();
 }
  

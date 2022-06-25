@@ -1,4 +1,12 @@
-pub fn return_value() {
+pub fn ret_value_main() {
+    struct_ret_value();
+    func_ret_value();
+}
+
+
+
+// 结构体返回值
+fn struct_ret_value() {
     let x = 5;
     let y = {
         let x = 1;
@@ -12,7 +20,7 @@ pub fn return_value() {
 
 
 // 函数的返回值
-pub fn func_return_value() {
+fn func_ret_value() {
     let x = five();
 
     //The value of x is: 5

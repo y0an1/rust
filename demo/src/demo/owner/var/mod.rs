@@ -1,4 +1,11 @@
-pub fn func_move() {
+pub fn owner_var_main() {
+    func_move();
+    func_clone();
+}
+
+
+// move 功能
+fn func_move() {
     let s1 = String::from("hello");
 
     // s1 是一个指向堆内存的变量，s1 作为等号的右值，那
@@ -11,7 +18,8 @@ pub fn func_move() {
 }   // 因为 s1 已经不可用所以不会触发 drop 函数，而 s2 指向了堆内存，所以会触发 drop 函数
 
 
-pub fn func_clone() {
+// clone 功能
+fn func_clone() {
     let s1 = String::from("hello");
     let s2 = s1.clone();
 
