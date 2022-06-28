@@ -250,7 +250,7 @@ struct User {
 
 - 实例化 struct
 
-```rust
+```
 let user = User {
     email: String::from("someone@example.com"),
     username: String::from("someusername123"),
@@ -261,7 +261,7 @@ let user = User {
 
 - struct 更新语法
 
-```rust
+```
 let user1 = User {
     email: String::from("someone@example.com"),
     username: String::from("someusername123"),
@@ -280,7 +280,7 @@ let user2 = User {
 
 - 类似 tuple 的 struct，即：struct 整体有名，而字段没有名
 
-```rust
+```
 struct Color(i32, i32, i32);
 struct Point(i32, i32, i32);
 
@@ -315,3 +315,245 @@ struct User {
 
 - 如果想要使用 **println!("{}", struct)** 来打印一个 struct 实例，必须实现 **std::fmt::Display** 函数，否则实现 **std::fmt::Debug** 函数
 - 如果以上两个函数都没有实现，但却要调试信息，则可以在声明结构体时，在其上面添加 **#[derive(Debug)]** 后，后续则可以用 **{:?}** 或者 **{:#?}** 来打印出当前的结构体实例的结构
+
+## struct 方法
+
+- 与函数类似，不同之处：
+  - 方法在 struct(或 enum、trait 对象)的上下文中定义
+  - 第一个参数是 **self**
+
+### 定义方法
+
+- 在 **impl** 块里定义方法
+- 方法的第一个参数可以是 **&self**，也可以是 **self**，或者是 **mut self** / **&mut self**，跟普通的参数一样
+
+### 方法调用
+
+- 在 Rust 中，并没有像 C/C++ 一样，有 “->” 和 “.” 的区别。Rust 只有 “.”，编译器会自动识别当前的方法调用，自动添加引用或解引用
+
+
+## 关联函数
+
+- 类似于 C++ 的静态方法
+- 在 **impl**( implement ) 块里定义函数，但函数的第一个参数不再是 **self** 的，则是 **关联函数**
+- 关联函数一般情况下，用于 struct 的构造器，例如： String::from() --- 就是一个关联函数
+
+# 枚举与模式匹配
+
+## 定义枚举
+
+- 使用关键字 **enum** 定义
+
+```rust
+enum IpAddrKind {
+  V4,   // 枚举的变体
+  V6,
+}
+```
+
+- 将数据附加到枚举的变体中
+  - 优点： 1. 不需要额外使用 struct，2. 每个变体可以拥有不同的类型以及关联的数据量
+
+```rust
+enum IpAddr {
+  V4(u8, u8, u8, u8),
+  V6(String),
+}
+```
+
+### 定义枚举的方法
+
+- 跟 struct 的一样，使用 **impl** 块进行定义
+
+### Option 枚举
+
+- 定义于标准库中， 在 Prelude(预导入模块)中，描述了：某个值可能存在(某种类型)或不存在的情况，主要是为了解决 NULL 的情况
+- **在 Rust 中，没有 Null 值存在**
+- Option<T> 和 T 是不同的类型，不可以把 Option<T> 直接当成 T，要使用 Option<T> 中的 T，必须手动进行转化为 T
+  - 调用 **expect()** 方法即可转化为 T
+- 标准库中的定义：
+  - 在使用 Option<T> 时，如果要编译器推导类型，则必须设置 T，否则编译器无法推导出变量的类型
+ 
+```rust
+enum Option<T> {
+  Some(T),
+  None,
+}
+```
+
+## 控制刘运算符 - match
+
+- 允许一个值与一系列模式进行匹配，并执行匹配的模式对应的代码
+- 模式可以是字面值、变量名、通配符...
+- 使用 match 匹配时，必须穷举所有的可能性，如果不想处理其中的某几种可能，则可以使用 “_” 来表示
+
+### 绑定值的模式
+
+- 匹配的分支可以绑定到被匹配对象的部分值，因此，可以从 enum 变体中提取值
+
+### if let
+
+- 类似 match，但 if let 只关心一种匹配情况，而忽略其他情况
+
+
+## Package, Crate, Module
+
+- Package(包)：Cargo 的特性，构建，测试，共享 crate
+- Crate(单元包)：一个模块树，它可产生一个 library 或可执行文件
+- Module(模块)、use： 让你控制代码的组织、作用域、私有路径
+- Path(路径)：为 struct、function 或 module 等项命名的方式
+
+## 常用的集合
+
+- 集合：存放在堆内存上的数据结构，分别：Vector、String、HashMap
+
+### Vector
+
+- Vec<T>，可以存放多个值，只能存放相同类型的数据，在内存中连续存放，类似与 array
+- 创建 vector: **Vec::new()**
+  - 使用初始值创建 Vec<T>: **vec!**
+- 获取 vector 的值： 1. 索引，2. get()
+  - 需要注意的是： 当使用索引获取时，如果越界了，程序就会崩溃。而使用 get() 函数则不会，会返回 None 值
+- 对 vector 的所有权和借用规则都与默认的一样，例子
+- 利用 enum 的变体可以存放多种数据类型的特性， 创建一个枚举类型的 vector 来存放多种数据类型，例子
+
+### String
+
+#### 创建 String 的方式：
+
+- 使用 String::new 函数
+- 使用 to_string() 方法
+- 使用 String::form() 函数
+
+#### 更新 String：
+
+- 使用 **push_str()** 方法，将一个 **字符串切片** 附加到 String
+- 使用 **push()** 方法，将 **单个字符** 附加到 String
+
+#### 拼接 String：
+- 使用 **+** 运算符拼接 String，需要注意的是： + 号左边的是 **字符串类型**，右边需要的是一个 **字符串切片**
+  - 首先：加法运算在 Rust 中是使用了泛型，所以此处实际上是调用了类似： `fn add(self, s: &str) -> String` ，所以使用了 + 进行字符串拼接后，首个字符串的所有权会被转移
+  - 第二个参数明明是字符串切片，但传递字符串引用却可以调用，是因为编译器在传参时，进行了解引用强制转换(deref coercion)
+  - 字符串拼接运算符 + 左边只能是一个 String 类型，不能是 & 或 字符串切片类型，否则编译器会提示： **note: string concatenation requires an owned `String` on the left**
+- 使用 **format!** 宏拼接 String
+  - 使用 `format!()` 不会获取字符串的所有权，后续如果要使用其参数，是可以正常使用
+
+#### String 按索引方式访问
+
+- 在 Rust 中，字符串是 utf-8 的形式保存
+- Rust 的字符串不支持索引语法访问，因为没有实现 `Index<{integer}>` 这个 trait
+ 
+#### 内部封装 
+
+- String 实际上是对 Vec<u8> 的包装
+- 在 Rust 看来，字符串有三种形式：
+  - 字节： Bytes
+    - `for x in s.bytes()` --- 进行遍历
+  - Unicode 标量值： Scalar Values
+    - 对一个 String 类型进行 **len()** 的调用，其返回值是根据该字符串的 Unicode 标量值来计算的
+    - `for x in s.chars()` --- 进行遍历
+  - 字形簇： Grapheme Clusters
+    - Rust 没有进行包装，需要使用第三方库进行遍历 
+
+#### 切割 String
+
+- 可以使用 **[]** 和 一个范围来创建字符串的切片
+- 当切割字符串时，必须严格按照字符串的字符边界进行切割，不然程序会 panic
+
+### HashMap
+
+- HashMap 的数据存放在 Heap 上
+- HashMap 是同构的，即：所有的 key 和 Value 必须是同一种类型
+
+
+#### 创建 HashMap 
+
+- 创建空的 `HashMap::new()` 函数，添加数据 `insert()` 方法
+- 使用 `collect()` 方法，在元素类型是 Tuple 的 Vector 上使用 collect 方法，则可以组建一个 HashMap，但要求 Tuple 有两个值，一个作为 Key，一个作为 value
+  - 因为 collect 方法可以把数据整合成很多种集合类型，所以需要手动指定 **返回值的类型** 
+
+#### HashMap 和所有权
+
+- 对于实现了 Copy trait 的类型，值会被复制到 HashMap 中
+- 对于拥有所有权的值，值会被移动，所有权会转移给 HashMap，如果将值的引用插入到 HashMap，值本身不会移动，**但在 HashMap 有效的期间，被引用的值必须保持有效**
+
+#### 访问 HashMap 的值
+
+- 例子
+
+#### 遍历 HashMap
+
+- 例子
+
+#### 更新 HashMap 的值
+
+- 例子
+
+#### Hash 函数 
+
+- 默认情况下，HashMap 使用加密功能强大的 Hash 函数，可以抵抗拒绝服务（DoS）攻击，不是可用的最快的 Hash 算法，但具有更好安全性
+- 可以制定不同的 hasher 来切换到另一个函数
+  - hasher 是实现 BuildHasher trait 的类型 
+  - （该内容需要自行找资料，视频没有详细讲解）
+
+## 错误处理
+
+---
+
+- Rust 会在编译阶段提示错误，要求程序员在该阶段进行处理，所以 Rust 较为可靠
+- 错误分为：**可恢复** 和 **不可恢复**
+  - 可恢复：例如文件未找到，可再次尝试
+  - 不可恢复：bug，例如：数组访问越界等
+- 大多数语言是使用异常机制进行处理，但 Rust 没有类似异常的机制，它提供了
+  - 可恢复错误：`Result<T,E>`
+  - 不可恢复错误： `panic!` 宏
+
+### 不可恢复的错误与 panic!
+
+- 当 panic! 执行的过程:
+  - 程序会打印一个错误信息
+  - 展开（unwind）、清理调用栈（Stack）
+  - 退出程序
+- 默认的情况下，当 panic 发生时，程序会展开调用栈（工作量巨大），Rust 会沿着调用栈进行回溯，清理掉每个遇到的函数中的数据
+- 程序员可以通过 toml 文件，设置为 **立即终止调用栈**，即：不进行清理，直接停止程序（内存的清理工作将由 OS 进行）
+  - 在 **Cargo.toml** 中适当的 **profile** 部分设置 `panic = 'abort'`
+
+### 使用 panic! 产生回溯信息
+
+- 通过设置环境变量 `RUST_BACKTRACE=1` 获取回溯信息
+- 通过设置环境变量 `RUST_BACKTRACE=full` 获取更加详细的回溯信息
+
+### Result 与可恢复的错误
+
+#### Ruslt 枚举
+
+```rust
+enum Result<T, E> {
+  Ok(T),
+  Err(E),
+}
+```
+
+- T: 操作成功的情况下，Ok 变体里返回的数据的类型
+- E: 操作失败的情况下，Err 变体里返回的错误的类型
+- 在 Result<T, E> 有很多方法都是可以接收闭包（closure）作为参数，使用这些方法可以让代码更加简洁
+- `unwrap` 方法，其作用相当于一个 match 表达式的一个快捷方法，如果 Result 结果是 Ok 则返回 Ok 里面的值；如果 Result 结果是 Err 则调用 panic! 宏
+  - 该方法的错误信息不能自定义 
+- `expect` 方法与 `unwrap‵ 方法类似，但可指定错误信息
+
+#### 传播错误
+
+- 当返回值是 Result<T, E> 时，就可以传播错误
+- **?** 运算符是用于传播错误的一种快捷方式，它只能用于返回 Result 类型的函数
+  - 如果 Result 是 Ok：Ok中的值就是表达式的结果，然后 继续执行程序
+  - 如果 Result 是 Err：Err就是 **整个函数** 的返回值，就像使用了 return
+  - ? 运算符会隐式的调用 from 函数，它所接收到的错误类型会被转化为当前函数返回类型所定义的错误类型
+    - Trait std::convert::From 上的 from 函数，用于错误之间的转换 
+    - 只有每个错误类型都实现s了转换为所返回的错误类型的 from 函数，才可以使用 ? 
+- 如果要在 main 函数中使用 ？ 运算符，则需要修改 main 函数的返回值类型
+  - `fn main() -> Result<(), Box<dyn Error>>` ，其中 **Box<dyn Error>** 需要使用 **use std::error::Error** 才可以，它是一个 trait 对象，可简单理解为“任何可能的错误类型”
+
+### 什么时候应该使用 panic!
+
+- 总体原则：**在定义一个可能失败的函数时，优先考虑返回 Result，否则就 panic!**
+- [视频链接](https://www.bilibili.com/video/BV1hp4y1k7SV?p=42&spm_id_from=pageDriver&vd_source=acd7a7a6ca9b19c883482c0d52f771d5)

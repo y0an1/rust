@@ -1,5 +1,7 @@
-// if
-fn _ctrl_if() {
+
+/// if
+#[allow(unused)]
+fn demo1() {
     let number = 3;
     if number < 5 {
         println!("condition was true");
@@ -8,8 +10,9 @@ fn _ctrl_if() {
     }
 }
 
-// loop
-fn _ctrl_loop() {
+/// loop
+#[allow(unused)]
+fn demo2() {
     let mut condition = 10;
     let loop_ret_value = loop {
         condition += 1;
@@ -20,8 +23,9 @@ fn _ctrl_loop() {
     println!("loop return value is: {}", loop_ret_value); // loop return value is: 20
 }
 
-// while
-fn _ctrl_while() {
+/// while
+#[allow(unused)]
+fn demo3() {
     let mut condition = 3;
     while condition > 0 {
         println!("{}", condition);
@@ -30,8 +34,9 @@ fn _ctrl_while() {
     println!("leave while");
 }
 
-// for
-fn _ctrl_for() {
+/// for
+#[allow(unused)]
+fn demo4() {
     let ary = [1, 2, 3, 4, 5, 6];
     // 使用while循环遍历集合，需要先判断其范围，容易越界访问
     // let mut idx = 0;
@@ -53,8 +58,9 @@ fn _ctrl_for() {
     }
 }
 
-// 使用 range 库
-fn _use_range() {
+/// 使用 range 库
+#[allow(unused)]
+fn demo5() {
     for number in (1..4).rev() {
         println!("{}", number);
     }
@@ -62,9 +68,9 @@ fn _use_range() {
 }
 
 pub fn main() {
-    // _ctrl_if();
-    // _ctrl_loop();
-    // _ctrl_while();
-    // _ctrl_for();
-    // _use_range();
+    // demo1();
+    // demo2();
+    // demo3();
+    // demo4();
+    // demo5();
 }

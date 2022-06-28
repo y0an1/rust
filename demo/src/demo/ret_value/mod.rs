@@ -1,6 +1,7 @@
 
-// 结构体返回值
-fn _struct_ret_value() {
+/// 结构体返回值
+#[allow(unused)]
+fn demo1() {
     let x = 5;
     let y = {
         let x = 1;
@@ -13,21 +14,22 @@ fn _struct_ret_value() {
 }
 
 
-// 函数的返回值
-fn _func_ret_value() {
-    let x = _five();
+/// 函数的返回值
+#[allow(unused)]
+fn demo2() {
+    let x = five();
 
     //The value of x is: 5
     //The value of x is: 6
     println!("The value of x is: {}", x);
 }
 
-fn _five() -> i32{
+fn five() -> i32{
     // 5   // 函数最末尾的表达式的值默认为函数返回值
     return 6;   // 当使用 return 时，则以该关键字后面的表达式为返回值
 }
 
 pub fn main() {
-    // _struct_ret_value();
-    // _func_ret_value();
+    // demo1();
+    // demo2();
 }

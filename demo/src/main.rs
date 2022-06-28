@@ -35,7 +35,13 @@ use crate::demo::owner::fnc;
 use crate::demo::owner;
 use crate::demo::borrow;
 use crate::demo::slice;
-use crate::demo::_struct;
+use crate::demo::r#struct;
+use crate::demo::r#enum;
+use crate::demo::r#match;
+use crate::demo::vector;
+use crate::demo::string;
+use crate::demo::hashmap;
+use crate::demo::error;
 
 fn main() {
     hello_rust::main();
@@ -48,6 +54,13 @@ fn main() {
     owner::ret_value::main();
     borrow::main();
     slice::main();
-    _struct::main();
+    r#struct::main();
+    r#enum::main();
+    r#match::main();
+    vector::main();
+    string::main();
+    hashmap::main();
+    error::main();
+
 }
  

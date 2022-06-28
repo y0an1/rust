@@ -1,3 +1,9 @@
+
+#[allow(unused)]
+fn demo() {
+    println!("hello rust");
+}
+
 pub fn main() {
-    // println!("hello rust");
+    // demo();
 }

@@ -1,44 +1,52 @@
-// 在这个例子中，为了不丢失 s1 的数据，需要定义 s2 来接收 s1 的所有权
-fn _demo_1() {
+
+/// 在这个例子中，为了不丢失 s1 的数据，需要定义 s2 来接收 s1 的所有权
+#[allow(unused)]
+fn demo1() {
     let s1 = String::from("hello world");
-    let (s2, len) = _calc_length(s1);
+    let (s2, len) = calc_length(s1);
 
     println!("s2: {}, len: {}", s2, len);
 }
 
-fn _calc_length(s: String) -> (String, usize) {
+fn calc_length(s: String) -> (String, usize) {
     let len = s.len();
     return (s, len);
 }
 
-// 在同样的例子中， rust 为了确保仅处理数据，而不必处理多个变量，提出了“引用”特性
-fn _demo_2() {
+/// 在同样的例子中， rust 为了确保仅处理数据，而不必处理多个变量，提出了“引用”特性
+///
+/// 当一个引用作为函数参数时，这个行为叫做借用
+///
+/// 默认借用的东西是不能更改的
+#[allow(unused)]
+fn demo2() {
     let s1 = String::from("hello world");
-    let len = _calc_len_ref(&s1); // 此处传递的是 s1 的引用，并没有涉及所有权
+    let len = calc_len_ref(&s1); // 此处传递的是 s1 的引用，并没有涉及所有权
 
     println!("s1: {}, len: {}", s1, len);
 }
 
-// 当一个引用作为函数参数时，这个行为叫做借用
-// 默认借用的东西是不能更改的
-fn _calc_len_ref(s: &String) -> usize {
+fn calc_len_ref(s: &String) -> usize {
     return s.len();
 }
 
-fn _demo_3() {
+/// 如果要修改借用的东西，则需要将其声明为可变
+#[allow(unused)]
+fn demo3() {
     let mut s1 = String::from("hello world");
-    let len = _calc_len_mut_ref(&mut s1);
+    let len = calc_len_mut_ref(&mut s1);
 
     println!("s1: {}, len: {}", s1, len);
 }
-// 如果要修改借用的东西，则需要将其声明为可变
-fn _calc_len_mut_ref(s: &mut String) -> usize {
+
+fn calc_len_mut_ref(s: &mut String) -> usize {
     s.push_str(" rust");
     return s.len();
 }
 
-// 在同一个作用域内，有且仅有一个可变引用
-fn _demo_4() {
+/// 在同一个作用域内，有且仅有一个可变引用
+#[allow(unused)]
+fn demo4() {
     let mut s = String::from("hello");
     let s1 = &mut s;
     // let s2 = &mut s;
@@ -48,7 +56,7 @@ fn _demo_4() {
 
     /*
     error[E0499]: cannot borrow `s` as mutable more than once at a time
-    --> src/demo/borrow/_struct:45:14
+    --> src/demo/borrow/struct:45:14
     |
     44 |     let s1 = &mut s;
     |              ------ first mutable borrow occurs here
@@ -60,8 +68,9 @@ fn _demo_4() {
     */
 }
 
-// 创建多个作用域来允许多个可变引用
-fn _demo_5() {
+/// 创建多个作用域来允许多个可变引用
+#[allow(unused)]
+fn demo5() {
     let mut s = String::from("hello");
 
     {
@@ -73,17 +82,18 @@ fn _demo_5() {
     println!("s2: {}", &s2);
 }
 
-// 一个变量不可以同时有不可变引用和可变引用
-fn _demo_6() {
-    let mut _s = String::from("hello");
-    let r1 = &_s;
-    let r2 = &_s;
+/// 一个变量不可以同时有不可变引用和可变引用
+#[allow(unused)]
+fn demo6() {
+    let mut s = String::from("hello");
+    let r1 = &s;
+    let r2 = &s;
     println!("r1:{}, r2:{}", r1, r2);
 
     // let s1 = &mut s;
     /*
         error[E0502]: cannot borrow `s` as mutable because it is also borrowed as immutable
-        --> src/demo/borrow/_struct:81:14
+        --> src/demo/borrow/struct:81:14
         |
         79 |     let r1 = &s;
         |              -- immutable borrow occurs here
@@ -98,36 +108,36 @@ fn _demo_6() {
     // println!("s1:{}", s1);
 }
 
-// 悬空引用
-// fn _demo_7() {
+/// 悬空引用
+#[allow(unused)]
+// fn demo7() {
 //     let r = dangle();
 // }
 //
 // fn dangle() -> &String{
 //     let s = String::from("hello");
 //     return &s;
+//
+//     // error[E0106]: missing lifetime specifier
+//     //    --> src/demo/borrow/struct:106:16
+//     //     |
+//     // 106 | fn dangle() -> &String{
+//     //     |                ^ expected named lifetime parameter
+//     //     |
+//     //     = help: this function's return type contains a borrowed value, but there is no value for it to be borrowed from
+//     // help: consider using the `'static` lifetime
+//     //     |
+//     // 106 | fn dangle() -> &'static String{
+//     //     |                ~~~~~~~~
 // }
 
-/*
-error[E0106]: missing lifetime specifier
-   --> src/demo/borrow/_struct:106:16
-    |
-106 | fn dangle() -> &String{
-    |                ^ expected named lifetime parameter
-    |
-    = help: this function's return type contains a borrowed value, but there is no value for it to be borrowed from
-help: consider using the `'static` lifetime
-    |
-106 | fn dangle() -> &'static String{
-    |                ~~~~~~~~
-*/
 
 pub fn main() {
-    // demo_1();
-    // demo_2();
-    // demo_3();
-    // demo_4();
-    // demo_5();
-    // demo_6();
-    // _demo_7();
+    // demo1();
+    // demo2();
+    // demo3();
+    // demo4();
+    // demo5();
+    // demo6();
+    // demo7();
 }

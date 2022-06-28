@@ -1,18 +1,16 @@
 
-// 有一个函数，它接受字符串作为参数，返回它在这个字符串里找到的第一个单词，如果函数没找到任何空格，那么整个字符串就被返回
+/// 有一个函数，它接受字符串作为参数，返回它在这个字符串里找到的第一个单词，如果函数没找到任何空格，那么整个字符串就被返回
 
-
-fn _demo_1(){
+#[allow(unused)]
+fn demo1(){
     let mut s = String::from("hello world");
-    let idx = _first_word(&s);
-
+    let idx = first_word(&s);
     s.clear();  // 该例子中，idx 的值是与 s 进行绑定，如果 s 的值在后面被释放了，而仍然使用 idx 去获取 s 的空格，则会有 bug
-
     println!("space idex: {}", idx);
 }
 
-//  目前实现的功能是： 找到字符串中的空格后，返回该空格的下标；没有则返回字符串长度
-fn _first_word(s: &String) -> usize {
+///  目前实现的功能是： 找到字符串中的空格后，返回该空格的下标；没有则返回字符串长度
+fn first_word(s: &String) -> usize {
     let bytes = s.as_bytes();
 
     // 普通的遍历
@@ -33,9 +31,9 @@ fn _first_word(s: &String) -> usize {
     return bytes.len();
 }
 
-
-// 字符串切片
-fn _demo_2() {
+/// 字符串切片
+#[allow(unused)]
+fn demo2() {
     let s = String::from("Hello World");
 
     // 切片是从下标 0 开始，到下标 4 结束，不包含下标 5
@@ -45,16 +43,16 @@ fn _demo_2() {
     println!("{}, {}", hello, world);
 }
 
-
-// 使用字符串切片的功能完善 demo1
-fn _demo_3() {
+/// 使用字符串切片的功能完善 demo1
+#[allow(unused)]
+fn demo3() {
     let mut _s = String::from("hello world");
-    let slice = _first_word_str_slice(&_s);
+    let slice = first_word_str_slice(&_s);
     // s.clear();
     println!("{}", slice);
     /*
     error[E0502]: cannot borrow `s` as mutable because it is also borrowed as immutable
-      --> src/demo/slice/_struct:54:5
+      --> src/demo/slice/struct:54:5
        |
     53 |     let slice = _first_word_str_slice(&s);
        |                                       -- immutable borrow occurs here
@@ -65,7 +63,7 @@ fn _demo_3() {
     */
 }
 
-fn _first_word_str_slice(s: &String) -> &str {
+fn first_word_str_slice(s: &String) -> &str {
     let bytes = s.as_bytes();
     for (i, &item) in bytes.iter().enumerate() {
         if item == b' ' {
@@ -75,18 +73,19 @@ fn _first_word_str_slice(s: &String) -> &str {
     return &s[..];
 }
 
-// 使用字符串切片作为函数参数，从而提高灵活性
-fn _demo_4() {
+/// 使用字符串切片作为函数参数，从而提高灵活性
+#[allow(unused)]
+fn demo4() {
     let my_string = String::from("hello world");
-    let word_index = _first_word_str_slice_param(&my_string[..]);   // 创建一个完整的字符串切片
+    let word_index = first_word_str_slice_param(&my_string[..]);   // 创建一个完整的字符串切片
     println!("{}", word_index);
 
     let my_string_literal = "hello world";
-    let word_index = _first_word_str_slice_param(my_string_literal);
+    let word_index = first_word_str_slice_param(my_string_literal);
     println!("{}", word_index);
 }
 
-fn _first_word_str_slice_param(s: &str) -> &str {
+fn first_word_str_slice_param(s: &str) -> &str {
     let bytes = s.as_bytes();
     for (i, &item) in bytes.iter().enumerate() {
         if item == b' ' {
@@ -97,8 +96,8 @@ fn _first_word_str_slice_param(s: &str) -> &str {
 }
 
 pub fn main() {
-    // _demo_1();
-    // _demo_2();
-    // _demo_3();
-    _demo_4();
+    // demo1();
+    // demo2();
+    // demo3();
+    // demo4();
 }

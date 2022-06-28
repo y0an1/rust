@@ -1,6 +1,8 @@
 
-// 基础类型
-fn _base_type() {
+
+/// 基础类型
+#[allow(unused)]
+fn demo1() {
     // error[E0282]: type annotations needed
     // 在编译器推导中，42解析成的数字有u32，i32等多个数据类型可以标注
     // 所以必须手动指定该变量的类型
@@ -9,16 +11,19 @@ fn _base_type() {
     println!("guess value: {}", guess);
 }
 
-// 元组类型
-fn _tuple_type() {
+/// 元组类型
+#[allow(unused)]
+fn demo2() {
     let tup: (i32, f64, u8) = (500, 6.4, 1);
     let (x, y, z) = tup; // 使用模式匹配来解构 Tuple，从而获取到元素的值
     println!("{}, {}, {}", tup.0, tup.1, tup.2); // 使用点标记法来访问元素的值
     println!("{}, {}, {}", x, y, z);
 }
 
-// 数组类型
-fn _array_type() {
+
+/// 数组类型
+#[allow(unused)]
+fn demo3() {
     // let ary = [1,2,3,4,5,6];
     // let ary2:[i32; 3] = [1,2,3]; // 显式的声明数组类型[type; len]
     // let ary3 =[0;3]; // 相当于 int ary[3] = {0};
@@ -31,7 +36,7 @@ fn _array_type() {
 }
 
 pub fn main() {
-    // _base_type();
-    // _tuple_type();
-    // _array_type();
+    // demo1();
+    // demo2();
+    // demo3();
 }
