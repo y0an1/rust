@@ -69,7 +69,7 @@ fn demo6() {
 }
 
 fn read_string_from_file() -> Result<String, io::Error> {
-    /// 正常传播错误
+    // 正常传播错误
     // let f = File::open("hello.txt");
     // let mut f = match f{
     //     Ok(file) => file,
@@ -82,15 +82,15 @@ fn read_string_from_file() -> Result<String, io::Error> {
     //     Err(e) => Err(e),
     // }
 
-    /// 使用 ？ 运算符重写上面的代码
+    // 使用 ？ 运算符重写上面的代码
     // let mut s = String::new();
     // let mut f = File::open("hello.txt")?;   /// 与 74-77 行的作用是一样的
     // f.read_to_string(&mut s)?;  /// 与 80-83 行的作用是一样的
     // Ok(s)
 
-    /// 使用链式调用再次简化上面代码
+    // 使用链式调用再次简化上面代码
     let mut s = String::new();
-    File::open("hello.txt")?.read_to_string(&mut s)?;  /// 与 87-88 行的作用是一样的
+    File::open("hello.txt")?.read_to_string(&mut s)?;  // 与 87-88 行的作用是一样的
     Ok(s)
 }
 
@@ -101,5 +101,5 @@ pub fn main() {
     // demo3();
     // demo4();
     // demo5();
-    demo6();
+    // demo6();
 }

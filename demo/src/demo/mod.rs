@@ -14,3 +14,6 @@ pub mod vector;
 pub mod string;
 pub mod hashmap;
 pub mod error;
+pub mod generics;
+pub mod r#trait;
+pub mod life_cycle;

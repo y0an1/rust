@@ -42,6 +42,9 @@ use crate::demo::vector;
 use crate::demo::string;
 use crate::demo::hashmap;
 use crate::demo::error;
+use crate::demo::generics;
+use crate::demo::r#trait;
+use crate::demo::life_cycle;
 
 fn main() {
     hello_rust::main();
@@ -61,6 +64,8 @@ fn main() {
     string::main();
     hashmap::main();
     error::main();
-
+    generics::main();
+    r#trait::main();
+    life_cycle::main();
 }
  
