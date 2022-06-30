@@ -1215,5 +1215,14 @@ mod tests {
 
 ### 接受命令行参数
 
+---
+
 - 目标：`cargo run search_content file_name` -> 从 file_name 中 找到 search_content 的东西
 - 接收命令行参数，可以使用 `std::env::arg()`，获取到后，需要使用 `collect` 函数将其转化成集合
+
+### 读取文件
+
+---
+
+- 读取文件内容，可以使用 `std::fs::read_to_string()`
+- `cargo run xxx 123.txt` 是在项目目录下读取 123.txt 文件
