@@ -1204,3 +1204,16 @@ mod tests {
 - binary crate 是独立运行的，无法把 main.rs 的函数导入作用域
 
 # No.12 项目实例： 命令行程序
+
+- 内容：
+  1. 接受命令行参数
+  2. 读取文件
+  3. 重构：改进模块和错误处理
+  4. 使用 TDD（测试驱动开发）开发库功能
+  5. 使用环境变量
+  6. 将错误消息写入标准错误而不是标准输出
+
+### 接受命令行参数
+
+- 目标：`cargo run search_content file_name` -> 从 file_name 中 找到 search_content 的东西
+- 接收命令行参数，可以使用 `std::env::arg()`，获取到后，需要使用 `collect` 函数将其转化成集合
