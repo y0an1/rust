@@ -464,10 +464,150 @@ enum Option<T> {
 
 # No.7 Package, Crate, Module
 
+## 7.1 Package、Create、定义 Module
+
 - Package(包)：Cargo 的特性，构建，测试，共享 crate
 - Crate(单元包)：一个模块树，它可产生一个 library 或可执行文件
 - Module(模块)、use： 让你控制代码的组织、作用域、私有路径
 - Path(路径)：为 struct、function 或 module 等项命名的方式
+
+```
+Package
+  |
+  |-> Crate
+    |
+    |-> Module
+      |
+      |-> Path
+```
+
+### Package 和 Crate
+
+---
+
+- **Crate** 的类型共有两种： **binary** 和 **library**
+- **Crate Root**：是一个源代码文件，Rust 编译器是从该文件开始执行代码逻辑
+- <font color=red>**Package**
+  - 包含了一个 **Cargo.toml**，该文件描述了如何构建这些 **Crates**
+  - 只能包含 0-1 个 library carte
+  - 可以包含无数个 binary crate
+  - 但必须至少包含一个 crate（library 或 binary）</font>
+
+### Cargo 的惯例
+
+---
+
+- **src/main.rs**
+  - 是 binary crate 的 crate root
+  - crate 名和 package 名相同
+- **src/lib.rs**
+  - package 包含一个 library carte
+  - 是 library carte 的 crate root
+  - crate 名和 package 名相同
+- Cargo 会把 carte root 文件移交给 rustc（Rust 编译器）来构建 library 或 binary
+- 如果将文件放在 **src/bin** 下面，则每个文件都是单独的 binary crate
+
+### Crate 的作用
+
+---
+
+- 将相关功能组合到一个作用域内，便于在项目间进行分享，还可以防止命名冲突
+
+### 定义 Module 来控制作用域和私有性
+
+---
+
+- **Module**
+  - 在一个 crate 内，将代码进行分组，增加可读性，易于复用
+  - 控制条目（item）的私有性（public、private）
+- 建立 module
+  - 使用 **mod** 关键字
+  - module 可以嵌套定义
+  - 可以包含其它项（struct、enum、常量、trait、函数等）的定义
+
+### Module
+
+- **src/main.rs** 和 **src/lib.rs** 叫做 **carte roots**，它们（任意一个）的内容形成了名为 crate 的模块，位于整个模块树的根部
+
+## 7.2 路径（Path）
+
+- 跟其他语言中的命名空间有点类似
+- 路径有两种形式
+  - 绝对路径：从 crate root 开始，使用 crate 名或字面值 `crate`
+  - 相对路径：从当前模块开始，使用 self，super或当前莫烤烟的标识符
+- 如果路径中有多个标识符，标识符之间则用 **::** 分割
+
+### 私有边界（privacy boundary）
+
+---
+
+- 模块不仅可以组织代码，还可以定义私有边界，如果把 **函数** 或 **struct** 等设为私有，可以将它放到某个模块中
+- Rust 中所有的条目（函数，方法，struct，enum，module，常量）默认是 **私有的**
+- 父级模块无法访问子模块中的私有条目
+- 子模块里可以使用所有祖先模块中的条目
+
+### pub 关键字
+
+---
+
+- pub struct
+  - struct 是公共的
+  - 结构体字段默认是 **私有的**
+- pub enum
+  - enum 是公共的
+  - 枚举的变体也是 **公共的**
+
+### use 关键字
+
+---
+
+- 可以使用 `use` 关键字将路径导入到作用域内
+- 使用 `use` 关键字的约定俗成
+  - 函数：将函数的父级模块引入到作用域（指定到父级）
+  - struct、enum，其它：指定完整路径（指定到本身），但有同名条目时，需要指定到父级
+- 可以使用 `pub use` 来向外暴露私有的模块，而外部再使用时，不用再重复导入
+
+### as 关键字
+
+---
+
+- `as` 关键字可以为引入的路径指定本地的别名
+
+### 使用外部包
+
+---
+
+1. Cargo.toml 中的 [dependencies] 中添加依赖的包名和版本，格式：`pkg_name = "version"`
+2. `use` 将特定条目引入作用域
+
+- 切换 crate 的下载地址
+  - 到 **.cargo** 目录下，创建 **config** 文件，将下面的内容写入到文件中
+  ```
+  [source.cartes-io]
+  registry = "https://github.com/rust-lang/crates.io-index"
+  
+  replace-with = 'tuna'
+  [source.tuna]
+  registry = "https://mirrors.tuna.tsinghua.edu.cn/git/crates.io-index.git"
+  
+  [net]
+  git-fetch-with-cli = true
+  ```
+  
+### 使用嵌套路径清理大量的 use 语句
+
+---
+
+- 格式： 
+  - **路径相同的部分::{差异部分1， 差异部分2， 差异部分3，...}；**
+  - **路径相同的部分::{self， 差异部分2， 差异部分3，...}；** 
+
+### 将模块内容写入到其他文件
+
+---
+
+- 当`mod module_name` 后跟随的不再是 "{}" ，而是 ";"，Rust 则会在同级目录下寻找对应模块名的文件
+
 
 # No.8 常用的集合
 
@@ -908,3 +1048,159 @@ enum Result<T, E> {
 # 11 编写自动化测试
 
 ## 11.1 编写和运行测试
+
+- 测试就是执行一个特定功能的函数，其功能主要是验证非测试代码的功能是否与预期一致
+- 测试函数通常执行 3 个操作（简称：3A 操作）
+  - 准备数据/状态
+  - 运行被测试的代码
+  - 断言（Assert）结果
+
+### 解剖测试函数
+
+---
+
+- 测试函数需要使用 **test** 属性（attribute）
+  - Attribute 就是一段 Rust 代码的元数据，不会修改代码的逻辑，只是对代码的修饰或标注
+- 将一个函数标记为测试函数
+
+```rust
+#[test]
+fn fnc_name() {}
+```
+
+### 运行测试
+
+--- 
+
+- `cargo test` 运行 **所有** 测试函数，会直接运行标注了 **test** 的函数，并报告其运行是否成功
+- 使用 `cargo new project_name --lib` 创建 library 项目的时候，会直接生成一个 test module，里面有一个 test 函数
+- 定义测试模块
+
+```rust
+#[cfg(test)]
+mod tests {
+  
+  #[test]
+  fn it_works() {
+    assert_eq!(2+2, 4);
+  }
+}
+```
+
+### 测试失败
+
+--- 
+
+- 测试函数 panic 代表失败
+- 每个测试运行在一个新线程，当主线程看见某个测试线程挂掉了，则表示那个测试标记为失败了
+
+## 11.2 断言（Assert）
+
+### 使用 `assert!` 宏检查测试结果
+
+---
+
+- 检查某个状态是否为 true，如果该状态为 false，则会调用 panic!
+- 使用 `assert_eq!()` 和 `assert_ne!` 可以测试参数的相等性
+  - 如果直接使用 `assert!(param_1 == param_2)`，这种只会打印出结果是否相等，而使用上面两个宏，则会在失败时，将参数的值也打印出来
+  - 因为要打印参数，使用的是 debug 格式，要求参数实现了 **PartialEq 和 Debug Traits
+
+## 11.3 添加自定义错误信息
+
+---
+
+- 添加自定义错误信息的位置是原参数的末尾的后面，即 `assert!(param, diy_msg)`, `assert_eq!(param1, param2, diy_msg)`, `assert_ne!(param1, param2, diy_msg)`
+
+
+## 11.4 用 should_panic 检查恐慌
+
+- 使用 `#[should_panic]` 来检查是否会发生错误，如果函数发生 panic，则测试通过；否则测试失败
+- 添加 **expected** 参数，从而让 shoud_panic 更加精确
+
+## 11.5 在测试中使用 Result<T, E>
+
+- 返回 Ok，测试通过；返回 Err, 测试失败
+- <font color=red> 注意：不要在使用 **Result** 编写的测试上标注 `#[should_panic]` </font>
+
+## 11.6 控制测试运行：并行和连续执行测试
+
+- `cargo test -- --test-threads=1` --> 不想以并行方式运行测试，或相对线程数量进行细粒度控制
+- `cargo test -- --show-output` --> 让 Rust 的 test 库捕获所有打印到标准输出的内容
+
+## 11.7 按测试名称运行测试
+
+- `cargo test test_fnc_name` --> 运行指定的测试函数
+  - 以上只能运行单个测试，如果要指定运行多个测试函数，可以将多个测试函数名共有的部分替换掉上面的 **test_fnc_name** 就可以了 
+
+## 11.8 忽略测试
+
+- 使用 `#[ignore]` 属性来忽略特定的测试函数
+- 当需要运行被忽略的测试函数，可以使用 `cargo test -- --ignored`
+
+## 11.9 测试组织：单元测试
+
+- 单元测试会将所有需要测试的代码都存放到一个单独的文件中，并在文件中创建一个 test module，并使用 `#[cfg(test)]` 标注
+
+### 测试分类
+
+---
+
+- Rust 的测试共有两类：单元测试和集成测试
+- 单元测试：
+  - 小、专注
+  - 一次对一个模块进行隔离测试
+  - 可测试 **private** 接口
+- 集成测试：
+  - 在库外部，和其他外部代码一样使用代码
+  - 只能使用 **public** 接口
+  - 可能在每个测试中使用到多个模块
+
+### #[cfg(test)] 标注
+
+- 使用了该标注，只有在运行 `cargo test` 才会进行编译和运行代码
+  - 集成测试在不同的目录，它不需要该标注
+- **cfg(test)** 是用来告诉 Rust，只有在使用 test 配置(`cargo test`)时，才编译和运行代码
+- 如果在测试模块中，添加了一个函数，但不使用 `#[test]` 标注，则该函数只会被编译不会执行
+
+### 测试私有函数
+
+---
+
+- 例子
+
+## 11.10 集成测试
+
+- 在 Rust 里，集成测试完全位于被测试库的外部，目的是测试被测试库的多个部分是否能正确的一起工作
+- 集成测试仅能使用在 library crate 中，不能使用在 binary crate 中，即：不能使用在只含有 main.rs 的 crate 中
+
+
+### tests 目录
+
+---
+
+- tests 目录与 src 目录同级
+- tests 目录下的每个测试文件都是单独的一个 crate，所以需要将被测试库导入
+- 对于 tests 目录， Rust 默认只会在 `cargo test` 中编译执行，所以不需要 `#[cfg(test)]`
+
+### 运行指定的集成测试
+
+---
+
+- `cargo test fnc_name` --> 运行一个特定的集成测试
+- `cargo test --test test_file_name` --> 运行某个测试文件内的所有测试
+
+### 集成测试中的子模块
+
+---
+
+- 在 tests 目录下面的子目录，则不会被 Rust 视为一个测试文件
+  - 具体操作：目录为模块名，里面创建一个 **mod.rs** 文件，文件内部写入代码
+
+### 针对 binary crate 的集成测试
+
+---
+
+- 因为只有 library crate 才能暴露函数给其它 crate 用，所以要在 binary crate 中创建 lib.rs
+- binary crate 是独立运行的，无法把 main.rs 的函数导入作用域
+
+# No.12 项目实例： 命令行程序
