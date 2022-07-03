@@ -6,6 +6,7 @@
 - rust 程序：
   - 程序后缀名：```rs```
   - 文件名规范：```hello_world.rs```
+- link.exe no find 错误，可以通过 `rustup toolchain install stable-x86_64-pc-windows-gnu` 和 `rustup default stable-x86_64-pc-windows-gnu` 解决
 
 # 项目管理
 
@@ -1213,16 +1214,33 @@ mod tests {
   5. 使用环境变量
   6. 将错误消息写入标准错误而不是标准输出
 
-### 接受命令行参数
-
----
+## 12.1 接受命令行参数
 
 - 目标：`cargo run search_content file_name` -> 从 file_name 中 找到 search_content 的东西
 - 接收命令行参数，可以使用 `std::env::arg()`，获取到后，需要使用 `collect` 函数将其转化成集合
 
-### 读取文件
-
----
+## 12.2 读取文件
 
 - 读取文件内容，可以使用 `std::fs::read_to_string()`
 - `cargo run xxx 123.txt` 是在项目目录下读取 123.txt 文件
+
+## 12.3 重构：改进模块和错误处理
+
+### 二进制程序关注点分离的指导性原则
+
+---
+
+- 将程序拆分为 **main.rs** 和 **lib.rs**，将业务逻辑放入 **lib.rs**
+- 当命令行解析逻辑较少时，将它放在 **main.rs** 也可以
+- 当命令行解析逻辑变复杂时，需要将它从 **main.rs** 提取到 **lib.rs**
+
+## 12.4 使用 TDD（测试驱动开发）开发库功能
+
+### 测试驱动开发（Test-Driven Development)
+
+---
+
+1. 编写一个会失败的测试，运行该测试，确保它是按照预期的原因失败
+2. 编写或修改刚好足够的代码，让新测试通过
+3. 重构刚刚添加或修改的代码，确保测试会始终通过
+4. 返回步骤 1，继续
