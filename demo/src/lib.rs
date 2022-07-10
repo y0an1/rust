@@ -23,7 +23,7 @@ mod demo;
 // use crate::demo::*;
 
 /// 使用嵌套路径来导入
-use crate::demo::{hello_rust, data_type, variables, ctrl_stream, ret_value, owner, borrow, slice, r#struct, r#enum, r#match, vector, string, hashmap, error, generics, r#trait, life_cycle};
+use crate::demo::{hello_rust, data_type, variables, ctrl_stream, ret_value, owner, borrow, slice, r#struct, r#enum, r#match, vector, string, hashmap, error, generics, r#trait, life_cycle, closure};
 
 pub fn entry_fnc() {
     hello_rust::main();
@@ -44,4 +44,5 @@ pub fn entry_fnc() {
     generics::main();
     r#trait::main();
     life_cycle::main();
+    closure::main();
 }
