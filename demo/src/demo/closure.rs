@@ -100,9 +100,76 @@ mod demo3 {
     }
 }
 
+// demo4 是继续优化 demo2 的代码
+mod demo4 {
+    use std::thread;
+    use std::time::Duration;
+
+    // 缓存器缺点：
+    //  1. 当需要针对不同的参数 arg， value 方法总会得到同样的值
+    //      解决方法：可以使用 HashMap 代替单个值： key - arg 参数 | value - 执行闭包的结果
+    //  2. 只能接收一个 u32 类型的参数和 u32 类型的返回值
+    //      解决方法：可以使用泛型声明来解决
+    struct Cacher<T>
+        where T: Fn(u32) -> u32
+    {
+        calculation: T,
+        value: Option<u32>,
+    }
+
+    impl<T> Cacher<T>
+        where T: Fn(u32) -> u32
+    {
+        fn new(calculation: T) -> Cacher<T> {
+            Cacher {
+                calculation,
+                value: None,
+            }
+        }
+
+        // 这个方法的含义就是当 value 为 None 时，将会调用闭包，并将结果保存到 value 和 将结果返回
+        fn value(&mut self, arg: u32) -> u32 {
+            match self.value {
+                Some(v) => v,
+                None => {
+                    let v = (self.calculation)(arg);
+                    self.value = Some(v);
+                    v
+                }
+            }
+        }
+    }
+
+    pub fn main() {
+        let simulated_user_specified_value = 10;
+        let simulated_random_number = 7;
+        generate_workout(simulated_user_specified_value, simulated_random_number);
+    }
+
+    fn generate_workout(intensity: u32, random_number: u32) {
+        let mut expensive_closure = Cacher::new(|num| -> u32{
+            println!("calculating slowly ...");
+            thread::sleep(Duration::from_secs(2));
+            num
+        });
+
+        // 当使用了缓存模式后，闭包就永远只会被调用一次
+        if intensity < 25 {
+            println!("Today, do {} pushups!", expensive_closure.value(intensity));
+            println!("Next, do {} situps!", expensive_closure.value(intensity));
+        } else {
+            if random_number == 3 {
+                println!("Take a break today! Remember to stay hydrated!");
+            } else {
+                println!("Today, run for {} minutes!", expensive_closure.value(intensity));
+            }
+        }
+    }
+}
 
 pub fn main() {
     // demo1::main();
     // demo2::main();
-    demo3::main();
+    // demo3::main();
+    demo4::main();
 }
