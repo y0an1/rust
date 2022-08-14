@@ -18,8 +18,9 @@ mod demo2 {
     pub fn main() {
         let teams = vec![String::from("Blue"), String::from("Yellow")];
         let intial_scores = vec![10, 50];
-        let scores: HashMap<_, _> = teams.iter().zip(intial_scores.iter())  // 创建一个 元素类型为 tuple 的数组
-            .collect();                                                   // 使用 collect 来将这个数组转化成 HashMap
+        let scores: HashMap<_, _> = teams.iter()
+                                                       .zip(intial_scores.iter())  // 创建一个 元素类型为 tuple 的数组
+                                                       .collect();                                           // 使用 collect 来将这个数组转化成 HashMap
     }
 }
 

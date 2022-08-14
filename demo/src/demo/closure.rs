@@ -102,6 +102,9 @@ mod demo3 {
 
 // demo4 是继续优化 demo2 的代码
 mod demo4 {
+    use std::collections::HashMap;
+    use std::fmt::Display;
+    use std::hash::Hash;
     use std::thread;
     use std::time::Duration;
 
@@ -110,30 +113,63 @@ mod demo4 {
     //      解决方法：可以使用 HashMap 代替单个值： key - arg 参数 | value - 执行闭包的结果
     //  2. 只能接收一个 u32 类型的参数和 u32 类型的返回值
     //      解决方法：可以使用泛型声明来解决
-    struct Cacher<T>
-        where T: Fn(u32) -> u32
+    // struct Cacher<T>
+    //     where T: Fn(u32) -> u32
+    struct Cacher<T, E>
+        where T: Fn(E) -> E, E: Display + Copy + Eq + Hash
     {
         calculation: T,
-        value: Option<u32>,
+        // value: Option<u32>,      // 存在缺陷，当需要不同值时，返回的永远都是第一次闭包的值
+        // value: HashMap<u32, u32>,   // 使用 map 来解决以上的需求
+        value: HashMap<E, E>,   // 使用 map 来解决以上的需求
     }
 
-    impl<T> Cacher<T>
-        where T: Fn(u32) -> u32
+    // impl<T> Cacher<T>
+    //     where T: Fn(u32) -> u32
+    impl<T, E> Cacher<T, E>
+        where T: Fn(E) -> E, E: Display + Copy + Eq + Hash
     {
-        fn new(calculation: T) -> Cacher<T> {
+        // fn new(calculation: T) -> Cacher<T> {
+        fn new(calculation: T) -> Cacher<T, E> {
             Cacher {
                 calculation,
-                value: None,
+                // value: None,
+                value: HashMap::new(),
             }
         }
 
         // 这个方法的含义就是当 value 为 None 时，将会调用闭包，并将结果保存到 value 和 将结果返回
-        fn value(&mut self, arg: u32) -> u32 {
-            match self.value {
-                Some(v) => v,
+        // fn value(&mut self, arg: u32) -> u32 {
+        fn value(&mut self, arg: E) -> E {
+
+            // match self.value {
+            //     Some(v) => v,
+            //     None => {
+            //         let v = (self.calculation)(arg);
+            //         self.value = Some(v);
+            //         v
+            //     }
+            // }
+
+            // 使用 map 获取到值
+            // match self.value.get(&arg) {
+            //     Some(v) =>{
+            //         *v
+            //     },
+            //     None => {
+            //         let v = (self.calculation)(arg);
+            //         self.value.insert(arg, v);
+            //         v
+            //     }
+            // }
+
+            match self.value.get(&arg) {
+                Some(v) => {
+                    *v
+                }
                 None => {
                     let v = (self.calculation)(arg);
-                    self.value = Some(v);
+                    self.value.insert(arg, v);
                     v
                 }
             }
@@ -141,9 +177,22 @@ mod demo4 {
     }
 
     pub fn main() {
-        let simulated_user_specified_value = 10;
-        let simulated_random_number = 7;
-        generate_workout(simulated_user_specified_value, simulated_random_number);
+        // let simulated_user_specified_value = 10;
+        // let simulated_random_number = 7;
+        // generate_workout(simulated_user_specified_value, simulated_random_number);
+
+
+        let mut closure = Cacher::new(|num| -> u32 { num });
+        println!("{}, {}", 1, closure.value(1));
+        println!("{}, {}", 2, closure.value(2));
+
+        let mut closure = Cacher::new(|num| -> i32 { num });
+        println!("{}, {}", -1, closure.value(-1));
+        println!("{}, {}", -2, closure.value(-2));
+
+        // let mut closure1 = Cacher::new(|num| -> f64{ num });
+        // println!("{},{}", 2.1, closure1.value(2.1));
+        // println!("{},{}", 3.1, closure1.value(3.1));
     }
 
     fn generate_workout(intensity: u32, random_number: u32) {

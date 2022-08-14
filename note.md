@@ -1309,12 +1309,42 @@ let add_one_v4 =    |x|                  x + 1 ;    // 闭包，由于函数体�
 
 #### 如何让结构体持有闭包
 
-- 结构体的定义是需要指导所有字段的类型，所以需要指明闭包的类型，指明闭包的类型，需要使用到泛型和 Trait Bound
-  - <font color="red"> 每个闭包实例都有自己唯一的匿名类型，即使两个闭包签名完全一样 </font>
-
-#### Fn Trait
-
-- **Fn traits** 由标准库提供，所有的闭包都至少实现了以下 trait 之一：
+- 结构体的定义是需要指导所有字段的类型，所以需要指明闭包的类型
+  - 指明闭包的类型，需要使用到泛型和 Trait Bound
+- <font color="red"> 每个闭包实例都有自己唯一的匿名类型，即使两个闭包签名完全一样 </font>
+- 要使用 trait bound，则必须实现 **Fn traits**， 此由标准库提供，所有的闭包都至少实现了以下 trait 之一：
   - Fn
   - FnMut
-  - FnOnce
+  - FnOnce 
+
+```rust
+struct Cacher<T>
+    where T: Fn(u32) -> u32
+{
+    calculation: T,
+    value: Option<u32>,
+}
+
+impl<T> Cacher<T>
+    where T: Fn(u32) -> u32
+{
+    fn new(calculation: T) -> Cacher<T> {
+        Cacher {
+            calculation,
+            value: None,
+        }
+    }
+
+    // 这个方法的含义就是当 value 为 None 时，将会调用闭包，并将结果保存到 value 和 将结果返回
+    fn value(&mut self, arg: u32) -> u32 {
+        match self.value {
+            Some(v) => v,
+            None => {
+                let v = (self.calculation)(arg);
+                self.value = Some(v);
+                v
+            }
+        }
+    }
+}
+```
