@@ -1,10 +1,10 @@
-
+/// 声明一个枚举类型
 #[allow(unused)]
 mod demo1 {
-    /// 声明一个枚举类型
     #[derive(Debug)]
     pub enum IpAddrKind {
-        V4, // 枚举变体
+        V4,
+        // 枚举变体
         V6,
     }
 
@@ -15,11 +15,11 @@ mod demo1 {
     }
 }
 
+/// 枚举作为 struct 字段类型
 #[allow(unused)]
 mod demo2 {
     use crate::r#enum::demo1::IpAddrKind;
 
-    /// 枚举作为 struct 字段类型
     #[derive(Debug)]
     struct IpAddr {
         kind: IpAddrKind,
@@ -43,10 +43,10 @@ mod demo2 {
     }
 }
 
-
+/// 将数据附加到枚举变体中
 #[allow(unused)]
 mod demo3 {
-    /// 将数据附加到枚举变体中
+    // 枚举的附加数据的类型可以是任意的
     #[derive(Debug)]
     enum IpAddr {
         V4(u8, u8, u8, u8),
@@ -55,27 +55,46 @@ mod demo3 {
 
     pub fn main() {
         let home = IpAddr::V4(127, 0, 0, 1);
+        let loopback = IpAddr::V6(String::from(":1"));
         println!("home: {:?}", home);
-
-        let lookback = IpAddr::V6(String::from(":1"));
-        println!("lookback: {:?}", lookback);
+        println!("loopback: {:?}", loopback);
     }
 }
 
-#[allow(unused)]
+/// 枚举定义方法
 mod demo4 {
-    /// 使用Option<T>
+    #[derive(Debug)]
+    enum IpAddr {
+        V4(u8, u8, u8, u8),
+        V6(String),
+    }
+
+    impl IpAddr {
+        fn show(&self) -> String {
+            "show".to_string()
+        }
+    }
+
+    pub fn main() {
+        let home = IpAddr::V4(127, 0, 0, 1);
+        let s = home.show();
+        println!("{}", s);
+    }
+}
+
+/// 使用 Option<T>
+#[allow(unused)]
+mod demo5 {
     pub fn main() {
         let some_number = Some(5);
         let some_string = Some("A String");
-
-        // let absent_number = None;    // 当使用 Option<T>::None 时，如果不指定类型，编译器则无法推导出变量的类型
-        let absent_number:Option<i32> = None;
+        let absent_number: Option<i32> = None; // 当使用 Option<T>::None 时，如果不指定类型，编译器则无法推导出变量的类型
     }
 }
 
+/// Option<T> 与 T 是不同类型，无法进行直接运算
 #[allow(unused)]
-mod demo5 {
+mod demo6 {
     pub fn main() {
         let x = 5;
         let y = Some(6);
@@ -89,7 +108,6 @@ mod demo5 {
         // = help: the trait `Add<Option<{integer}>>` is not implemented for `{integer}`
 
         println!("{}", x + y.expect("fruits are healthy"));
-
     }
 }
 
@@ -99,4 +117,5 @@ pub fn main() {
     // demo3::main();
     // demo4::main();
     // demo5::main();
+    // demo6::main();
 }
