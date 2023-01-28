@@ -1,7 +1,6 @@
-
+/// 所有权函数参数
 #[allow(unused)]
 mod demo1 {
-    /// 所有权函数参数
     pub fn main() {
         let s = String::from("Hello World");
         take_owner_ship(s);
@@ -23,9 +22,18 @@ mod demo1 {
     }
 }
 
+/// 返回值所有权
 #[allow(unused)]
 mod demo2 {
-    /// 返回值所有权
+    fn gives_ownership() -> String {
+        let some_string = String::from("hello");
+        return some_string;
+    }
+
+    fn takes_and_gives_back(a_string: String) -> String {
+        return a_string;
+    }
+
     pub fn main() {
         let s1 = gives_ownership();
         println!("s1: {}", s1);
@@ -35,20 +43,11 @@ mod demo2 {
         // println!("s2: {}", s2); // borrow of moved value: `s2`
         println!("s3: {}", s3);
     }
-
-    fn gives_ownership() -> String {
-        let some_string = String::from("hello");
-        return some_string;
-    }
-
-    fn takes_and_gives_back(a_string: String) -> String {
-        return a_string;
-    }
 }
 
+/// 变量所有权
 #[allow(unused)]
 mod demo3 {
-    /// 变量所有权
     /// move 功能
     pub fn move_fnc() {
         let s1 = String::from("hello");
