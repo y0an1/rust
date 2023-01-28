@@ -2,7 +2,7 @@
 #[allow(unused)]
 mod front_of_house {
     mod hosting {
-        fn add_to_waitlist() {}
+        fn add_to_wait_list() {}
 
         fn seat_at_table() {}
     }
@@ -27,17 +27,17 @@ use crate::demo::{hello_rust, data_type, variables, ctrl_stream, ret_value, owne
 
 pub fn entry_fnc() {
     hello_rust::main();
-    data_type::main();
-    variables::main();
-    ctrl_stream::main();
-    ret_value::main();
-    owner::main();
-    borrow::main();
-    slice::main();
-    r#struct::main();
-    r#enum::main();
-    r#match::main();
-    vector::main();
+    data_type::main(); // 数据类型
+    variables::main(); // 变量
+    ctrl_stream::main(); // 控制流
+    ret_value::main(); // 返回值
+    owner::main(); // 所有权
+    borrow::main(); // 引用
+    slice::main(); // 切片
+    r#struct::main(); // 结构体
+    r#enum::main(); // 枚举
+    r#match::main(); // 控制流匹配运算符 match
+    vector::main(); // 动态数组
     string::main();
     hashmap::main();
     error::main();
