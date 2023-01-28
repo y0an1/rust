@@ -3,8 +3,7 @@
 mod demo1 {
     #[derive(Debug)]
     pub enum IpAddrKind {
-        V4,
-        // 枚举变体
+        V4,// 枚举变体
         V6,
     }
 

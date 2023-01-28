@@ -2,12 +2,9 @@
 #[allow(unused)]
 mod demo1 {
     enum Coin {
-        Penny,
-        // 1美分
-        Nickel,
-        // 5美分
-        Dime,
-        // 10美分
+        Penny,      // 1美分
+        Nickel,     // 5美分
+        Dime,       // 10美分
         Quarter,    // 25美分
     }
 
@@ -39,12 +36,9 @@ mod demo2 {
 
     #[derive(Debug)]
     pub enum Coin {
-        Penny,
-        // 1美分
-        Nickel,
-        // 5美分
-        Dime,
-        // 10美分
+        Penny,      // 1美分
+        Nickel,     // 5美分
+        Dime,       // 10美分
         Quarter(UsState),    // 25美分
     }
 
