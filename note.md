@@ -1391,7 +1391,7 @@ fn main() {
 ```
 - <font color=red> 当要使用闭包 trait 时，优先使用 Fn，如果要使用 FnMut 或者 FnOnce 时，编译器会有提示 </font>
 
-## 迭代器
+## 13.2 迭代器
 
 - 迭代器模式：对一系列项执行某些任务
 - 迭代器负责：
@@ -1506,3 +1506,37 @@ fn main() {
   assert_eq!(18, sum);
 }
 ```
+
+# No.14 cargo, catres.io
+1. 通过 release profile 来自定义构建
+2. 在 https://crates.io/ 上发布库
+3. 通过 workspaces 组织大工程
+4. 从 https://crates.io/ 来安装库
+5. 使用自定义命令扩展 cargo
+
+## 14.1 通过 release profile 来自定义构建
+- 每个 profile 的配置都是独立于其它的 profile
+- Cargo 主要的两个 profile:
+  - dev profile: 适用于开发，cargo build
+  - release profile：适用于发布，cargo build --release
+
+### 自定义 profile
+- 针对每个 profile，Cargo 都提供了默认的配置
+- 如果项自定义 xxx profile 的配置：
+  - 在 Cargo.toml 里添加 [profile.xxx] 区域，在里面覆盖默认配置的子集
+
+```toml
+# 想覆盖默认的 dev profile
+[profile.dev]
+opt-level = 0 # 代码优化等级
+
+# 想覆盖i默认的 release profile
+[profile.release]
+opt-level = 3
+```
+
+## 14.5 Cargo 工作空间
+- cargo 工作空间：帮助管理多个相互关联切需要协同开发的 crate
+- cargo 工作空间是一套共享同一个 Cargo.lock 和输出文件夹的包
+
+### 创建工作空间
