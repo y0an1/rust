@@ -23,7 +23,11 @@ mod demo;
 // use crate::demo::*;
 
 /// 使用嵌套路径来导入
-use crate::demo::{hello_rust, data_type, variables, ctrl_stream, ret_value, owner, borrow, slice, r#struct, r#enum, r#match, vector, string, hashmap, error, generics, r#trait, life_cycle, closure};
+use crate::demo::{
+    hello_rust, data_type, variables, ctrl_stream, ret_value, owner, borrow,
+    slice, r#struct, r#enum, r#match, vector, string, hashmap, error, generics,
+    r#trait, life_cycle, closure, r#box
+};
 
 pub fn main() {
     hello_rust::main();
@@ -45,4 +49,5 @@ pub fn main() {
     r#trait::main(); // 接口
     life_cycle::main(); // 生命周期
     closure::main(); // 闭包
+    r#box::main();
 }

@@ -1,4 +1,5 @@
 /// 闭包的定义最终只会为参数、返回值推断出 **唯一** 具体的类型
+#[allow(unused)]
 mod demo1 {
     #[allow(unused)]
     pub fn main() {
@@ -16,6 +17,7 @@ mod demo1 {
 }
 
 // 这是一个模拟执行复杂算法的 demo，使用函数的方式，后续改为使用闭包的形式来优化
+#[allow(unused)]
 mod demo2 {
     use std::thread;
     use std::time::Duration;
@@ -88,6 +90,7 @@ mod demo2 {
 }
 
 // 闭包的唯一性
+#[allow(unused)]
 mod demo3 {
     pub fn main() {
         let example_closure = |x| x;
@@ -101,6 +104,7 @@ mod demo3 {
 }
 
 // demo4 是继续优化 demo2 的代码
+#[allow(unused)]
 mod demo4 {
     use std::collections::HashMap;
     use std::fmt::Display;

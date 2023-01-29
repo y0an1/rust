@@ -19,3 +19,4 @@ pub mod r#trait;
 pub mod life_cycle;
 pub mod test_module;
 pub mod closure;
+pub mod r#box;

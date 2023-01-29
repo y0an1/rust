@@ -53,6 +53,7 @@ impl Guess {
 
 
 #[cfg(test)]
+#[allow(unused)]
 mod tests {
 
     /// 使用外部的所有东西

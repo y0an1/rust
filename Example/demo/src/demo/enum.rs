@@ -61,6 +61,7 @@ mod demo3 {
 }
 
 /// 枚举定义方法
+#[allow(unused)]
 mod demo4 {
     #[derive(Debug)]
     enum IpAddr {
