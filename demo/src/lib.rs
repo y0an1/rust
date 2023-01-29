@@ -38,11 +38,11 @@ pub fn entry_fnc() {
     r#enum::main(); // 枚举
     r#match::main(); // 控制流匹配运算符 match
     vector::main(); // 动态数组
-    string::main();
-    hashmap::main();
-    error::main();
-    generics::main();
-    r#trait::main();
-    life_cycle::main();
-    closure::main();
+    string::main(); // 字符串
+    hashmap::main(); // hashmap
+    error::main(); // 错误处理
+    generics::main(); // 泛型
+    r#trait::main(); // 接口
+    life_cycle::main(); // 生命周期
+    closure::main(); // 闭包
 }

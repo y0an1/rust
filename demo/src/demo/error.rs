@@ -1,8 +1,7 @@
+/// 获取错误信息
 #[allow(unused)]
 mod demo1 {
     use std::fs::File;
-
-    /// 获取错误信息
     pub fn main() {
         let f = File::open("hello.txt");
         let f = match f {
@@ -16,12 +15,12 @@ mod demo1 {
     }
 }
 
+/// 遍历错误信息
 #[allow(unused)]
 mod demo2 {
     use std::fs::File;
     use std::io::ErrorKind;
 
-    /// 遍历错误信息
     pub fn main() {
         let f = File::open("hello.txt");
         let f = match f {
@@ -35,17 +34,17 @@ mod demo2 {
                 },
                 // 其他错误，则打印错误信息，并退出程序
                 other_error => panic!("Error opening file {:?}", other_error),
-            }
+            },
         };
     }
 }
 
+/// 使用闭包的方式来重写 demo2
 #[allow(unused)]
 mod demo3 {
     use std::fs::File;
     use std::io::ErrorKind;
 
-    /// 使用闭包的方式来重写 demo2
     pub fn main() {
         let f = File::open("hello.ttxt").unwrap_or_else(|error| {
             if error.kind() == ErrorKind::NotFound {
@@ -59,36 +58,31 @@ mod demo3 {
     }
 }
 
+/// 使用 unwarp 来重写 demo1
 #[allow(unused)]
 mod demo4 {
     use std::fs::File;
 
-    /// 使用 unwarp 来重写 demo1
     pub fn main() {
         let f = File::open("hello.txt").unwrap();
     }
 }
 
+/// 使用 expect 来重写 demo1
 #[allow(unused)]
 mod demo5 {
     use std::fs::File;
-
-    /// 使用 expect 来重写 demo1
     pub fn main() {
         let f = File::open("hello.txt").expect("无法打开 hello.txt 文件");
     }
 }
 
+/// 传播错误
 #[allow(unused)]
 mod demo6 {
     use std::fs::File;
     use std::io;
     use std::io::Read;
-
-    /// 传播错误
-    pub fn main() {
-        let result = read_string_from_file();
-    }
 
     fn read_string_from_file() -> Result<String, io::Error> {
         // 正常传播错误
@@ -112,11 +106,14 @@ mod demo6 {
 
         // 使用链式调用再次简化上面代码
         let mut s = String::new();
-        File::open("hello.txt")?.read_to_string(&mut s)?;  // 与 87-88 行的作用是一样的
+        File::open("hello.txt")?.read_to_string(&mut s)?; // 与 87-88 行的作用是一样的
         Ok(s)
     }
-}
 
+    pub fn main() {
+        let result = read_string_from_file();
+    }
+}
 
 pub fn main() {
     // demo1::main();

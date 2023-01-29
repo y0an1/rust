@@ -1,7 +1,6 @@
-
+/// 泛型函数定义, 缺乏 trait 相关知识，目前仅知道如何定义即可
 #[allow(unused)]
 mod demo1 {
-    /// 泛型函数定义, 缺乏 trait 相关知识，目前仅知道如何定义即可
     pub fn main() {
         // let num_list = [1,2,3,4,5,6];
         // let rslt = largest(&num_list);
@@ -20,9 +19,9 @@ mod demo1 {
     // }
 }
 
+/// Struct 定义中的泛型
 #[allow(unused)]
 mod demo2 {
-    /// Struct 定义中的泛型
     #[derive(Debug)]
     struct Point<T> {
         x: T,
@@ -52,7 +51,7 @@ mod demo2 {
 
     /// 方法泛型类型参数与 struct 泛型类型不一样
     impl<T, U> Point2<T, U> {
-        pub fn x(&self) ->&T {
+        pub fn x(&self) -> &T {
             &self.x
         }
 
@@ -60,11 +59,8 @@ mod demo2 {
             &self.y
         }
 
-        pub fn new(x:T, y:U) -> Point2<T,U> {
-            Point2 {
-                x,
-                y,
-            }
+        pub fn new(x: T, y: U) -> Point2<T, U> {
+            Point2 { x, y }
         }
 
         pub fn mixup<V, W>(self, other: Point2<V, W>) -> Point2<T, W> {
@@ -104,13 +100,12 @@ mod demo3 {
     pub fn main() {
         let p1 = Point2 { x: 3, y: 4 };
         let p2 = Point2 { x: "hello", y: 'c' };
-        let p3 = Point2::new(5,6);
+        let p3 = Point2::new(5, 6);
         println!("p3.x: {}, p3.y: {}", p3.x, p3.y);
 
         let p3 = p1.mixup(p2);
         println!("p3.x: {}, p3.y: {}", p3.x(), p3.y());
     }
-
 }
 
 pub fn main() {
