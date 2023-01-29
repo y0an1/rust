@@ -7,13 +7,34 @@ pub struct Config {
 }
 
 impl Config {
-    pub fn new(args: &[String]) -> Result<Config, &'static str> {
-        if args.len() < 3 {
-            return Err("长度小于 3");
-        }
+    // 优化前
+    // pub fn new(args: &[String]) -> Result<Config, &'static str> {
+    //     if args.len() < 3 {
+    //         return Err("长度小于 3");
+    //     }
 
-        let query = &args[1];
-        let file_name = &args[2];
+    //     let query = &args[1];
+    //     let file_name = &args[2];
+
+    //     Ok(Config {
+    //         query: query.clone(),
+    //         file_name: file_name.clone(),
+    //     })
+    // }
+
+    // 使用迭代器
+    // 这里加上 mut 是因为迭代器是可变的
+    pub fn new(mut args: std::env::Args) -> Result<Config, &'static str> {
+        args.next(); // 这里调用 next 是因为不需要它的路径
+
+        let query = match args.next() {
+            Some(arg) => arg,
+            None => return Err("没有输入搜索字符串"),
+        };
+        let file_name = match args.next() {
+            Some(arg) => arg,
+            None => return Err("没有输入文件名"),
+        };
 
         Ok(Config {
             query: query.clone(),
@@ -41,14 +62,20 @@ pub fn run(config: Config) -> Result<(), Box<dyn Error>> {
     Ok(())
 }
 
+
 pub fn search<'a>(query: &str, contents: &'a str) -> Vec<&'a str> {
-    let mut vec = Vec::new();
-    for ele in contents.lines().into_iter() {
-        if ele.contains(query) {
-            vec.push(ele);
-        }
-    }
-    vec
+    // 优化前
+    // let mut vec = Vec::new();
+    // for line in contents.lines() {
+    //     if line.contains(query) {
+    //         vec.push(line);
+    //     }
+    // }
+    // vec
+
+    contents.lines()
+        .filter(|line| line.contains(query))
+        .collect()
 }
 
 #[cfg(test)]
