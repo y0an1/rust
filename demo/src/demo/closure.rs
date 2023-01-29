@@ -2,16 +2,16 @@
 mod demo1 {
     #[allow(unused)]
     pub fn main() {
-        let closure = |x| x;    // 在闭包被定义时，编译器无法推导出闭包的类型
+        let closure = |x| x; // 在闭包被定义时，编译器无法推导出闭包的类型
         let s = closure(String::from("hello")); // 在调用闭包时，传入了 String 类型，此时，编译器就可以推导出闭包类型了
-        // let n = closure(5); // 当一个闭包只能处理一个类型，其不支持泛型处理，即：当编译器为闭包推导出类型后，该闭包只能处理该类型的数据
-        // error[E0308]: mismatched types
-        //  --> src\demo\closure.rs:8:25
-        //   |
-        // 8 |         let n = closure(5); //
-        //   |                         ^- help: try using a conversion method: `.to_string()`
-        //   |                         |
-        //   |                         expected struct `String`, found integer
+                                                // let n = closure(5); // 当一个闭包只能处理一个类型，其不支持泛型处理，即：当编译器为闭包推导出类型后，该闭包只能处理该类型的数据
+                                                // error[E0308]: mismatched types
+                                                //  --> src\demo\closure.rs:8:25
+                                                //   |
+                                                // 8 |         let n = closure(5); //
+                                                //   |                         ^- help: try using a conversion method: `.to_string()`
+                                                //   |                         |
+                                                //   |                         expected struct `String`, found integer
     }
 }
 
@@ -36,7 +36,7 @@ mod demo2 {
     fn generate_workout(intensity: u32, random_number: u32) {
         // 使用闭包的方法进行优化， 闭包的作用就是仅需要的时候才调用，如果不需要则不会被调用
         // 一般情况下，闭包都不需要手动标注类型，编译器会自动推导出来，但也可以手动标注
-        let expensive_closure = |num| -> u32{
+        let expensive_closure = |num| -> u32 {
             println!("calculating slowly ...");
             thread::sleep(Duration::from_secs(2));
             num
@@ -116,18 +116,22 @@ mod demo4 {
     // struct Cacher<T>
     //     where T: Fn(u32) -> u32
     struct Cacher<T, E>
-        where T: Fn(E) -> E, E: Display + Copy + Eq + Hash
+    where
+        T: Fn(E) -> E,
+        E: Display + Copy + Eq + Hash,
     {
         calculation: T,
         // value: Option<u32>,      // 存在缺陷，当需要不同值时，返回的永远都是第一次闭包的值
         // value: HashMap<u32, u32>,   // 使用 map 来解决以上的需求
-        value: HashMap<E, E>,   // 使用 map 来解决以上的需求
+        value: HashMap<E, E>, // 使用 map 来解决以上的需求
     }
 
     // impl<T> Cacher<T>
     //     where T: Fn(u32) -> u32
     impl<T, E> Cacher<T, E>
-        where T: Fn(E) -> E, E: Display + Copy + Eq + Hash
+    where
+        T: Fn(E) -> E,
+        E: Display + Copy + Eq + Hash,
     {
         // fn new(calculation: T) -> Cacher<T> {
         fn new(calculation: T) -> Cacher<T, E> {
@@ -141,7 +145,6 @@ mod demo4 {
         // 这个方法的含义就是当 value 为 None 时，将会调用闭包，并将结果保存到 value 和 将结果返回
         // fn value(&mut self, arg: u32) -> u32 {
         fn value(&mut self, arg: E) -> E {
-
             // match self.value {
             //     Some(v) => v,
             //     None => {
@@ -164,14 +167,35 @@ mod demo4 {
             // }
 
             match self.value.get(&arg) {
-                Some(v) => {
-                    *v
-                }
+                Some(v) => *v,
                 None => {
                     let v = (self.calculation)(arg);
                     self.value.insert(arg, v);
                     v
                 }
+            }
+        }
+    }
+  
+    fn generate_workout(intensity: u32, random_number: u32) {
+        let mut expensive_closure = Cacher::new(|num| -> u32 {
+            println!("calculating slowly ...");
+            thread::sleep(Duration::from_secs(2));
+            num
+        });
+
+        // 当使用了缓存模式后，闭包就永远只会被调用一次
+        if intensity < 25 {
+            println!("Today, do {} pushups!", expensive_closure.value(intensity));
+            println!("Next, do {} situps!", expensive_closure.value(intensity));
+        } else {
+            if random_number == 3 {
+                println!("Take a break today! Remember to stay hydrated!");
+            } else {
+                println!(
+                    "Today, run for {} minutes!",
+                    expensive_closure.value(intensity)
+                );
             }
         }
     }
@@ -193,26 +217,6 @@ mod demo4 {
         // let mut closure1 = Cacher::new(|num| -> f64{ num });
         // println!("{},{}", 2.1, closure1.value(2.1));
         // println!("{},{}", 3.1, closure1.value(3.1));
-    }
-
-    fn generate_workout(intensity: u32, random_number: u32) {
-        let mut expensive_closure = Cacher::new(|num| -> u32{
-            println!("calculating slowly ...");
-            thread::sleep(Duration::from_secs(2));
-            num
-        });
-
-        // 当使用了缓存模式后，闭包就永远只会被调用一次
-        if intensity < 25 {
-            println!("Today, do {} pushups!", expensive_closure.value(intensity));
-            println!("Next, do {} situps!", expensive_closure.value(intensity));
-        } else {
-            if random_number == 3 {
-                println!("Take a break today! Remember to stay hydrated!");
-            } else {
-                println!("Today, run for {} minutes!", expensive_closure.value(intensity));
-            }
-        }
     }
 }
 
