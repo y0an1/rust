@@ -30,7 +30,90 @@ mod demo2 {
     }
 }
 
+/// 定义自己的智能指针
+#[allow(unused)]
+mod demo3 {
+    use std::ops::Deref;
+
+    pub(super) struct MyBox<T>(T);
+
+    impl<T> MyBox<T> {
+        pub(super) fn new(x: T) -> MyBox<T> {
+            MyBox(x)
+        }
+    }
+
+    // 实现 Deref trait
+    impl<T> Deref for MyBox<T> {
+        type Target = T;
+
+        fn deref(&self) -> &T {
+            &self.0
+        }
+    }
+
+    pub fn main() {
+        let x = 5;
+        // let y = Box::new(x);
+        let y = MyBox::new(x);
+
+        assert_eq!(x, 5);
+        assert_eq!(x, *y); // 编译器会自动将 *y 展开成 *(y.deref())
+    }
+}
+
+/// Deref Coercion
+#[allow(unused)]
+mod demo4 {
+    use super::demo3::MyBox;
+
+    fn hello(name: &str) {
+        println!("Hello, {}", name);
+    }
+
+    pub fn main() {
+        let m = MyBox::new(String::from("Rust"));
+
+        // &m => &MyBox<String>
+        // 编译器会自动调用 MyBox::deref 方法来进行解引用
+        // &String => String
+        // 编译器会自动调用 String::deref 方法来进行解引用，返回的是 &str 类型
+        hello(&m);
+        hello("Rust");
+    }
+}
+
+/// Drop trait
+#[allow(unused)]
+mod demo5 {
+    struct CustomSmartPointer {
+        data: String,
+    }
+
+    impl Drop for CustomSmartPointer {
+        fn drop(&mut self) {
+            println!("Dropping CustomSmartPointer with dat `{}`!", self.data);
+        }
+    }
+
+    pub fn main() {
+        let c = CustomSmartPointer {
+            data: String::from("my stuff"),
+        };
+
+        drop(c); // 直接调用 std::mem::drop 来释放资源
+
+        let d = CustomSmartPointer{
+            data: String::from("other stuff")
+        };
+        println!("CustomSmartPointers created.")
+    }// 先调用 d 的 drop 方法，然后是 c 的 drop 方法
+}
+
 pub fn main() {
     // demo1::main();
-    demo2::main();
+    // demo2::main();
+    // demo3::main();
+    // demo4::main();
+    // demo5::main();
 }

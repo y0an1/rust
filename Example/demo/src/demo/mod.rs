@@ -20,3 +20,5 @@ pub mod life_cycle;
 pub mod test_module;
 pub mod closure;
 pub mod r#box;
+pub mod rc;
+pub mod refcell;

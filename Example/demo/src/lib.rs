@@ -26,7 +26,7 @@ mod demo;
 use crate::demo::{
     hello_rust, data_type, variables, ctrl_stream, ret_value, owner, borrow,
     slice, r#struct, r#enum, r#match, vector, string, hashmap, error, generics,
-    r#trait, life_cycle, closure, r#box
+    r#trait, life_cycle, closure, r#box, rc, refcell
 };
 
 pub fn main() {
@@ -49,5 +49,7 @@ pub fn main() {
     r#trait::main(); // 接口
     life_cycle::main(); // 生命周期
     closure::main(); // 闭包
-    r#box::main();
+    r#box::main(); // Box<T>
+    rc::main(); // Rc<T>
+    refcell::main(); // RefCell<T>
 }
