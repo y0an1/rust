@@ -1348,3 +1348,161 @@ impl<T> Cacher<T>
     }
 }
 ```
+
+### 闭包从所在环境捕获值
+
+#### 闭包可以捕获他们所在的环境
+
+- 闭包可以访问定义它的作用域内的变量，而普通函数不可以。但是会额外产生的内存开销
+
+```rust
+fn main() {
+  let x = 5;
+  let equal_x = |z| z == x;
+  let y = 4;
+  assert!(equal_x(y));
+}
+```
+
+#### 闭包从所在环境捕获值的方式
+- 与函数获得参数的三种方式一样：
+  1. 取得所有权：FnOnce
+  2. 可变借用：FnMut
+  3. 不可变借用：Fn
+- 创建闭包时，通过闭包对环境值的使用，Rust 可以推断出具体使用哪个 trait：
+  - 所有的闭包都实现了 FnOnce
+  - 没有移动捕获变量的实现了 FnMut
+  - 无需可变访问捕获变量的闭包实现了 Fn
+  - <font color=red> 所有实现了 Fn 的都实现了 FnMut，所有实现了 FnMut 的都实现了 FnOnce </font>
+
+#### move 关键字
+- 在参数列表前使用 move 关键字，可以强制闭包取得它所使用的环境值的所有权
+  - 当将闭包传递给新线程，以移动数据，使其归新线程所有时，此技术最为有用
+
+```rust
+fn main() {
+  let x = vec![1,2,3];
+  let equal_x = move |z| z == x;
+  println!("can't use x here: {:?}", x); // 这里会报错，x 的所有权被移动到闭包内
+
+  let y = vec![1,2,3];
+  assert!(equal_x(y));
+}
+```
+- <font color=red> 当要使用闭包 trait 时，优先使用 Fn，如果要使用 FnMut 或者 FnOnce 时，编译器会有提示 </font>
+
+## 迭代器
+
+- 迭代器模式：对一系列项执行某些任务
+- 迭代器负责：
+  - 遍历每个项
+  - 确定序列（遍历）何时完成
+- Rust 迭代器：
+  - 懒惰的：除非调用消费迭代器的方法，否则迭代器本身没有任何效果
+
+```rust
+fn main() {
+  let v1 = vec![1,2,3];
+  let v1_iter = v1.iter(); // 产生一个迭代器，没有对 v1_iter 进行操作时，是不产生开销的
+
+  // 当执行下面代码时，迭代器才会产生开销
+  for val in v1_iter {
+    println!("Got: {}", val);
+  }
+}
+```
+
+### 迭代器方法区别
+- iter(): 在不可变引用上创建迭代器
+- into_iter(): 创建的迭代器会获得所有权
+- iter_mut(): 迭代可变的引用
+
+### 消耗迭代器的方法
+- 实现 iterator trait 时必须实现 next 方法的原因之一在于内部会调用 next 方法
+- 调用 next 的方法叫做“消耗型适配器”，因为调用它们会把迭代器消耗尽
+
+```rust
+fn main() {
+  let v1 = vec![1,2,3];
+  let v1_iter = v1.iter();
+  let total: i32 = v1_iter.sum();// sum 方法会将 v1_iter 的项都消耗掉
+  assert_eq!(total, 6);
+}
+```
+
+### 产生其它迭代器的方法
+- 定义在 Iterator trait 上的另外一些方法叫做“迭代器适配器”，把迭代器转换为不同种类的迭代器
+- 可以通过链式调用使用多个迭代器适配器来执行复杂的操作
+
+```rust
+fn main() {
+  let v1: Vec<i32> = vec![1,2,3];
+  // 如果只是下面的表达式，实际上不会进行+1操作，因为 rust 的迭代器是懒惰的
+  // v1.iter().map(|x| x+1);
+
+  let v2: Vec<_> = v1.iter().map(|x| x+1).collect();
+}
+```
+
+### 使用闭包捕获环境（配合迭代器）
+- filter 方法：
+  - 接收一个闭包，在遍历迭代器的每个元素时，该闭包返回 bool 类型
+  - 如果返回 true：当前元素将会包含在 filter 产生的迭代器中
+  - 如果返回 false：当前元素将不会包含在 filter 产生的迭代器中
+
+```rust
+#[derive(PartialEq, Debug)]
+struct Shoe {
+  size: u32,
+  style: String,
+}
+
+fn shoes_in_my_size(shoes: Vec<Shoe>, shoe_size: u32) -> Vec<Shoe> {
+  shoes.into_iter() // 创建一个获得所有权的迭代器
+    .filter(
+      |x| x.size == shoe_size
+    )
+    .collect()
+}
+```
+
+### 创建自定义的迭代器
+- 实现 next 方法即可
+
+```rust
+struct Counter {
+  count: u32,
+}
+
+impl Counter {
+  fn new() -> Counter {
+    Counter {
+      count: 0
+    }
+  }
+}
+
+impl Iterator for Counter {
+  type Item = u32;
+  // Self:Item：可以暂时理解为 u32 类型
+  fn next(&mut self) -> Option<Self:Item> {
+    if self.count < 5 {
+      self.count += 1;
+      Some(self.count)
+    }
+    else {
+      None
+    }
+  }
+}
+
+fn main() {
+  let sum: u32 = Counter::new()
+    .zip(Counter::new().skip(1)) // 链接一个新的略过 1 个元素的 Counter
+    .map( |(a,b)| a * b) // 映射为元组类型，进行两值相乘
+    .filter( |x| x % 3 == 0) // 只保留可以被 3 整除的
+    .sum() // 将所有项的和进行相加
+
+  assert_eq!(18, sum);
+}
+```
