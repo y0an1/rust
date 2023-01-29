@@ -7,24 +7,8 @@
         {
             "type": "lldb",
             "request": "launch",
-            "name": "MiniGrep",
-            "program": "${workspaceFolder}/minigrep/target/debug/minigrep",
-            "args": [],
-            "cwd": "${workspaceFolder}"
-        },
-        {
-            "type": "lldb",
-            "request": "launch",
-            "name": "CmdLineExample",
-            "program": "${workspaceFolder}/command_line_example/target/debug/command_line_example",
-            "args": [],
-            "cwd": "${workspaceFolder}"
-        },
-        {
-            "type": "lldb",
-            "request": "launch",
             "name": "Demo",
-            "program": "${workspaceFolder}/demo/target/debug/demo",
+            "program": "${workspaceFolder}/Example/target/debug/demo",
             "args": [],
             "cwd": "${workspaceFolder}"
         }
