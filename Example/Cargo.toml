@@ -1,0 +1,7 @@
+[workspace]
+
+members = [
+    "demo",
+    "minigrep",
+    "old_minigrep"
+]
