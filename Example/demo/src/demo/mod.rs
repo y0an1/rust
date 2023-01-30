@@ -22,3 +22,8 @@ pub mod closure;
 pub mod r#box;
 pub mod rc;
 pub mod refcell;
+pub mod memleak;
+pub mod thread;
+pub mod object;
+pub mod r#unsafe;
+pub mod r#extern;

@@ -24,9 +24,9 @@ mod demo;
 
 /// 使用嵌套路径来导入
 use crate::demo::{
-    hello_rust, data_type, variables, ctrl_stream, ret_value, owner, borrow,
-    slice, r#struct, r#enum, r#match, vector, string, hashmap, error, generics,
-    r#trait, life_cycle, closure, r#box, rc, refcell
+    borrow, closure, ctrl_stream, data_type, error, generics, hashmap, hello_rust, life_cycle,
+    memleak, object, owner, r#box, r#enum, r#extern, r#match, r#struct, r#trait, r#unsafe, rc,
+    refcell, ret_value, slice, string, thread, variables, vector,
 };
 
 pub fn main() {
@@ -52,4 +52,9 @@ pub fn main() {
     r#box::main(); // Box<T>
     rc::main(); // Rc<T>
     refcell::main(); // RefCell<T>
+    memleak::main(); // 循环引用内存泄漏
+    thread::main();
+    object::main();
+    r#unsafe::main();
+    r#extern::main();
 }
